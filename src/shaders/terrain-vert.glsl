@@ -62,7 +62,7 @@ float computeWorley(float x, float y, float numRows, float numCols) {
     for (int i = -1; i < 2; i++) {
         for (int j = -1; j < 2; j++) {
             vec2 currGrid = vec2(floor(float(xPos)) + float(i), floor(float(yPos)) + float(j));
-            vec2 currNoise = currGrid + random2(currGrid, vec2(2.0, 1.0));
+            vec2 currNoise = currGrid + random2(currGrid, vec2(2.18, 2.1));
             float currDist = distance(vec2(xPos, yPos), currNoise);
             if (currDist <= minDist) {
                 minDist = currDist;

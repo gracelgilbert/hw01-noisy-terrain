@@ -101,27 +101,42 @@ void main()
     // out_Col = vec4(mix(vec3(0.5 * (fs_Sine + 1.0)), vec3(164.0 / 255.0, 233.0 / 255.0, 1.0), t), 1.0);
         float heightNoise = pow(fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 1.0, 10.0, 10.0), 0.08);
 
-        float heightScale = mix(1.0 - 1.0 / fs_Height, 0.3, 0.0);
-
         float redScale = 1.0 - clamp(pow(fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.6, 5.0, 5.0), 0.9), 0.2, 1.0);
+
         float greenScale = clamp(pow(fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.3, 0.1, 0.1), 0.4), 0.3, 0.8);
+        float saltScale = 1.0 - clamp(pow(fbmWorley(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 1.0, 0.005, 0.005), 10.0), 0.0, 1.0);
 
         float cracks = (1.0 - fs_gradientScale) * (1.0 - (0.75 * pow(1.0 - fbmWorley(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.9, 0.03, 0.03), 0.03)
                 + 0.25 * pow(1.0 - fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 1.0, 0.5, 0.5), 0.15)));
 
         float greenMap = clamp((1.3 - fs_gradientScale) * mix(heightNoise * mix(0.2, 0.9, 1.0 - 1.0/fs_Height) 
                          * pow(fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 2.0, 4.0, 4.0), 1.4), 0.0, 0.75), 0.0, 1.0);
-        
 
-        vec4 redColor = (1.0 - redScale) * vec4(1.0, 0.36, 0.2, 1.0) + redScale * vec4(0.4, 0.14, 0.1, 1.0);
+        float saltMap = pow(saltScale * pow(fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.9, 5.0, 1.4), 2.0) * clamp((0.5 - fs_gradientScale) * mix(heightNoise * mix(0.0, 0.5, 1.0/fs_Height) 
+                         * pow(fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 2.0, 4.0, 4.0), 1.4), 0.0, 0.5), 0.0, 1.0), 1.5);    
+
+
+        // float greenScale = clamp(pow(fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.3, 0.1, 0.1), 0.4), 0.3, 0.8);
+
+        vec4 redColor = (1.0 - redScale) * vec4(0.92, 0.33, 0.18, 1.0) + redScale * vec4(0.4, 0.14, 0.1, 1.0);
+        redColor.y += 0.08 * (sin((fs_Height + fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.7, 1.5, 1.5)) * 45.0 )) * pow(fs_gradientScale, 2.2);
+        redColor.x += 0.18 * (sin((fs_Height + fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.8, 1.5, 1.5)) * 80.0 )) * pow(fs_gradientScale, 2.2);
+        redColor.z += 0.16 * (sin((fs_Height + fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.6, 1.5, 1.5)) * 65.0 )) * pow(fs_gradientScale, 2.2);
+
         vec4 cracksColor = vec4(0.0, 0.0, 0.0, 1.0);
         vec4 greenColor = vec4(42.0 / 255.0, 50.0 / 255.0, 35.0 / 255.0, 1.0);
         greenColor = (greenScale) * greenColor + 0.1 * greenScale * greenColor;
 
+        vec4 saltColor = vec4(180.0 / 255.0, 210.0 / 255.0, 230.0 / 255.0, 1.0);
+        saltColor = (saltScale) * saltColor + 0.1 * saltScale * saltColor;
+
         // vec4 diffuseColor = vec4(greenMap, greenMap, greenMap, 1.0);
 
-        vec4 diffuseColor = (1.0 - greenMap) * (((cracks * cracksColor) + (1.0 - cracks) * redColor)) + greenMap * greenColor;
+        vec4 diffuseColor = (1.0 - saltMap) * ((1.0 - greenMap) * (((cracks * cracksColor) + (1.0 - cracks) * redColor)) + greenMap * greenColor) + saltMap * saltColor;
         diffuseColor.w = 1.0;
+        // diffuseColor = vec4(saltMap, saltMap, saltMap, 1.0);
+
+        // diffuseColor = redColor;
         // vec4 diffuseColor = vec4(0.0, fs_gradientScale, 0.0, 1.0);
         // vec4 diffuseColor = vec4(0.85 * red * cracks, green, 0.1, 1.0);
 
