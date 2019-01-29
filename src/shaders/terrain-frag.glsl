@@ -2,6 +2,7 @@
 precision highp float;
 
 uniform vec2 u_PlanePos; // Our location in the virtual world displayed by the plane
+uniform float u_SaltAmount;
 
 in vec3 fs_Pos;
 in vec4 fs_Nor;
@@ -97,7 +98,7 @@ float fbm(float x, float y, float height, float xScale, float yScale) {
 
 void main()
 {
-    float t = clamp(smoothstep(35.0, 60.0, length(fs_Pos)), 0.0, 1.0); // Distance fog
+    float t = clamp(smoothstep(25.0, 55.0, length(fs_Pos)), 0.0, 1.0); // Distance fog
     // out_Col = vec4(mix(vec3(0.5 * (fs_Sine + 1.0)), vec3(164.0 / 255.0, 233.0 / 255.0, 1.0), t), 1.0);
         float heightNoise = pow(fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 1.0, 10.0, 10.0), 0.08);
 
@@ -112,8 +113,8 @@ void main()
         float greenMap = clamp((1.3 - fs_gradientScale) * mix(heightNoise * mix(0.2, 0.9, 1.0 - 1.0/fs_Height) 
                          * pow(fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 2.0, 4.0, 4.0), 1.4), 0.0, 0.75), 0.0, 1.0);
 
-        float saltMap = pow(saltScale * pow(fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.9, 5.0, 1.4), 2.0) * clamp((0.5 - fs_gradientScale) * mix(heightNoise * mix(0.0, 0.5, 1.0/fs_Height) 
-                         * pow(fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 2.0, 4.0, 4.0), 1.4), 0.0, 0.5), 0.0, 1.0), 1.5);    
+        float saltMap = pow(saltScale * pow(fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.9, 5.0, 1.2), 2.0) * clamp((0.5 - fs_gradientScale) * mix(heightNoise * mix(0.0, 0.2, 1.0/fs_Height) 
+                         * pow(fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 2.0, 4.0, 4.0), u_SaltAmount), 0.0, 0.5), 0.0, 1.0), 1.5);    
 
 
         // float greenScale = clamp(pow(fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.3, 0.1, 0.1), 0.4), 0.3, 0.8);

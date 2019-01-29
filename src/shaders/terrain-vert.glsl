@@ -5,6 +5,7 @@ uniform mat4 u_Model;
 uniform mat4 u_ModelInvTr;
 uniform mat4 u_ViewProj;
 uniform vec2 u_PlanePos; // Our location in the virtual world displayed by the plane
+uniform float u_PlateauHeight;
 
 in vec4 vs_Pos;
 in vec4 vs_Nor;
@@ -106,9 +107,9 @@ float fbm(float x, float y, float height, float xScale, float yScale) {
 
 float getHeight(vec4 pos) {
     float height = 0.0;
-    float maxHeightValue = 1.9 * computeWorley(pos.x + u_PlanePos.x, pos.z + u_PlanePos.y, 1.0, 1.0);
+    float maxHeightValue = u_PlateauHeight * computeWorley(pos.x + u_PlanePos.x, pos.z + u_PlanePos.y, 1.0, 1.0);
     height += 3.0 * clamp(pow(fbmWorley((pos.x + u_PlanePos.x), (pos.z + u_PlanePos.y), 1.f, 2.8f, 2.8f), 5.7), 0.0, maxHeightValue);
-    height +=  pow(fbm((pos.x + u_PlanePos.x), (pos.z + u_PlanePos.y), 0.75f, 10.0f, 10.0f), 8.5);
+    height +=  pow(fbm((pos.x + u_PlanePos.x), (pos.z + u_PlanePos.y), 0.8f, 10.5f, 10.5f), 8.0);
     // height += 3.0 * clamp(pow(fbmWorley((pos.x + u_PlanePos.x), (pos.z + u_PlanePos.y), 1.f, 60.0f, 60.0f), 5.7), 0.0, 3.0 * maxHeightValue);
     return height;
     // float x = fbmWorley((pos.x + u_PlanePos.x), (pos.z + u_PlanePos.y), 1.f, 2.8f, 2.8f);

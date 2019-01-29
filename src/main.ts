@@ -13,6 +13,8 @@ import ShaderProgram, {Shader} from './rendering/gl/ShaderProgram';
 const controls = {
   tesselations: 5,
   'Load Scene': loadScene, // A function pointer, essentially
+  saltAmount: 2.0,
+  plateauHeight: 2.0,
 };
 
 let square: Square;
@@ -82,6 +84,9 @@ function main() {
 
   // Add controls to the gui
   const gui = new DAT.GUI();
+  gui.add(controls, 'saltAmount', 0.25, 3.0).step(0.01);
+  gui.add(controls, 'plateauHeight', 0.5, 3.0).step(0.1);
+
 
   // get canvas and webgl context
   const canvas = <HTMLCanvasElement> document.getElementById('canvas');
@@ -139,10 +144,10 @@ function main() {
     gl.viewport(0, 0, window.innerWidth, window.innerHeight);
     renderer.clear();
     processKeyPresses();
-    renderer.render(camera, lambert, [
+    renderer.render(camera, lambert, controls.saltAmount, controls.plateauHeight, [
       plane,
     ]);
-    renderer.render(camera, flat, [
+    renderer.render(camera, flat, controls.saltAmount, controls.plateauHeight, [
       square,
     ]);
     stats.end();

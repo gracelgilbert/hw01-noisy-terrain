@@ -30,6 +30,8 @@ class ShaderProgram {
   unifViewProj: WebGLUniformLocation;
   unifColor: WebGLUniformLocation;
   unifPlanePos: WebGLUniformLocation;
+  unifSaltAmount: WebGLUniformLocation;
+  unifPlateauHeight: WebGLUniformLocation;
 
   constructor(shaders: Array<Shader>) {
     this.prog = gl.createProgram();
@@ -45,16 +47,37 @@ class ShaderProgram {
     this.attrPos = gl.getAttribLocation(this.prog, "vs_Pos");
     this.attrNor = gl.getAttribLocation(this.prog, "vs_Nor");
     this.attrCol = gl.getAttribLocation(this.prog, "vs_Col");
-    this.unifModel      = gl.getUniformLocation(this.prog, "u_Model");
-    this.unifModelInvTr = gl.getUniformLocation(this.prog, "u_ModelInvTr");
-    this.unifViewProj   = gl.getUniformLocation(this.prog, "u_ViewProj");
-    this.unifPlanePos   = gl.getUniformLocation(this.prog, "u_PlanePos");
+    this.unifModel         = gl.getUniformLocation(this.prog, "u_Model");
+    this.unifModelInvTr    = gl.getUniformLocation(this.prog, "u_ModelInvTr");
+    this.unifViewProj      = gl.getUniformLocation(this.prog, "u_ViewProj");
+    this.unifPlanePos      = gl.getUniformLocation(this.prog, "u_PlanePos");
+    this.unifSaltAmount    = gl.getUniformLocation(this.prog, "u_SaltAmount");
+    this.unifPlateauHeight = gl.getUniformLocation(this.prog, "u_PlateauHeight");
+
   }
 
   use() {
     if (activeProgram !== this.prog) {
       gl.useProgram(this.prog);
       activeProgram = this.prog;
+    }
+  }
+
+  setSaltAmount(s: number) {
+    this.use();
+
+    if(this.unifSaltAmount != -1)
+    {
+      gl.uniform1f(this.unifSaltAmount, s);
+    }
+  }
+
+  setPlateauHeight(p: number) {
+    this.use();
+
+    if(this.unifPlateauHeight != -1)
+    {
+      gl.uniform1f(this.unifPlateauHeight, p);
     }
   }
 
