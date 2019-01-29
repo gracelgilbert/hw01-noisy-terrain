@@ -1,13 +1,13 @@
 # Grace Gilbert (gracegi)
 
 ## Demo Link
-![](https://gracelgilbert.github.io/hw01-noisy-terrain/)
+![https://gracelgilbert.github.io/hw01-noisy-terrain/](https://gracelgilbert.github.io/hw01-noisy-terrain/)
 
 ![](TerrainImage.png)
 
 ## External Resources
 I used the following source to help calculate the gradient of my height map terrain:
-![](https://gamedev.stackexchange.com/questions/89824/how-can-i-compute-a-steepness-value-for-height-map-cells)
+![https://gamedev.stackexchange.com/questions/89824/how-can-i-compute-a-steepness-value-for-height-map-cells](https://gamedev.stackexchange.com/questions/89824/how-can-i-compute-a-steepness-value-for-height-map-cells)
 
 ## Inspiration and Reference Images
 I was largely inspired by the Atacama Desert in Chile. I like how the mountains vary, ranging from flatter plateaus to pointed peaks. I also particularly liked the contrast of having the icy salt on the lower elevation flats, rather than the typical snow at the peaks of the mountains. These features of the desert, along with others, are ones I tried to incorperate into my terrain:
