@@ -94,9 +94,13 @@ void main() {
   vec4 color1 = vec4(40.0 / 255.0, 10.0 / 255.0, 80.0 / 255.0, 1.0);
   vec4 color2 = vec4(150.0 / 245.0, 255.0 / 255.0, 255.0 / 255.0, 1.0);
 
-  float heightScale = pow(fs_Pos.y, 7.5);
+  float t = 0.5 * (fs_Pos.y + 1.0);
+  t = smoothstep(0.8, 1.0, t);
+  out_Col = mix(color1, color2, t);
+
+  // float heightScale = pow(fs_Pos.y, 7.5);
 
 
 
-  out_Col = heightScale * color2 + (1.0 - heightScale) * color1;
+  // out_Col = heightScale * color2 + (1.0 - heightScale) * color1;
 }

@@ -48,6 +48,27 @@ float interpNoise2d(float x, float y) {
 
 }
 
+
+float interpNoise3d(float x, float y, float z) {
+  float intX = floor(x);
+  float fractX = fract(x);
+  float intY = floor(y);
+  float fractY = fract(y);
+  float intZ = floor(z);
+  float fractZ = fract(z);
+
+  float v1 = random1(vec2(intX, intY), vec2(1.f, 1.f));
+  float v2 = random1(vec2(intX + 1.f, intY), vec2(1.f, 1.f));
+  float v3 = random1(vec2(intX, intY + 1.f), vec2(1.f, 1.f));
+  float v4 = random1(vec2(intX + 1.f, intY + 1.f), vec2(1.f, 1.f));
+
+  float i1 = mix(v1, v2, fractX);
+  float i2 = mix(v3, v4, fractX);
+  return mix(i1, i2, fractY);
+  return 2.0;
+
+}
+
 float computeWorley(float x, float y, float numRows, float numCols) {
     float xPos = x * float(numCols) / 20.f;
     float yPos = y * float(numRows) / 20.f;
@@ -74,11 +95,13 @@ float fbmWorley(float x, float y, float height, float xScale, float yScale) {
   float total = 0.f;
   float persistence = 0.5f;
   int octaves = 8;
+  float freq = 2.0;
+  float amp = 1.0;
   for (int i = 0; i < octaves; i++) {
-    float freq = pow(2.0, float(i));
-    float amp = pow(persistence, float(i));
     // total += interpNoise2d( (x / xScale) * freq, (y / yScale) * freq) * amp;
     total += computeWorley( (x / xScale) * freq, (y / yScale) * freq, 2.0, 2.0) * amp;
+    freq *= 2.0;
+    amp *= persistence;
   }
   return height * total;
 }
@@ -87,11 +110,28 @@ float fbm(float x, float y, float height, float xScale, float yScale) {
   float total = 0.f;
   float persistence = 0.5f;
   int octaves = 8;
+  float freq = 2.0;
+  float amp = 1.0;
   for (int i = 0; i < octaves; i++) {
-    float freq = pow(2.0, float(i));
-    float amp = pow(persistence, float(i));
     // total += interpNoise2d( (x / xScale) * freq, (y / yScale) * freq) * amp;
     total += interpNoise2d( (x / xScale) * freq, (y / yScale) * freq) * amp;
+    freq *= 2.0;
+    amp *= persistence;
+  }
+  return height * total;
+}
+
+float fbm3D(float x, float y, float z, float height, float xScale, float yScale, float zScale) {
+  float total = 0.f;
+  float persistence = 0.5f;
+  int octaves = 8;
+  float freq = 2.0;
+  float amp = 1.0;
+  for (int i = 0; i < octaves; i++) {
+    // total += interpNoise2d( (x / xScale) * freq, (y / yScale) * freq) * amp;
+    total += interpNoise3d( (x / xScale) * freq, (y / yScale) * freq, (z / zScale) * freq) * amp;
+    freq *= 2.0;
+    amp *= persistence;
   }
   return height * total;
 }
@@ -105,7 +145,7 @@ void main()
         float redScale = 1.0 - clamp(pow(fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.6, 5.0, 5.0), 0.9), 0.2, 1.0);
 
         float greenScale = clamp(pow(fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.3, 0.1, 0.1), 0.4), 0.3, 0.8);
-        float saltScale = 1.0 - clamp(pow(fbmWorley(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 1.0, 0.005, 0.005), 10.0), 0.0, 1.0);
+        float saltScale = 1.0 - clamp(pow(fbmWorley(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.5, 0.02, 0.02), 5.0), 0.0, 1.0);
 
         float cracks = (1.0 - fs_gradientScale) * (1.0 - (0.75 * pow(1.0 - fbmWorley(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.9, 0.03, 0.03), 0.03)
                 + 0.25 * pow(1.0 - fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 1.0, 0.5, 0.5), 0.15)));
@@ -119,7 +159,7 @@ void main()
 
         // float greenScale = clamp(pow(fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.3, 0.1, 0.1), 0.4), 0.3, 0.8);
 
-        vec4 redColor = (1.0 - redScale) * vec4(0.92, 0.33, 0.18, 1.0) + redScale * vec4(0.4, 0.14, 0.1, 1.0);
+        vec4 redColor = (1.0 - redScale) * vec4(0.9, 0.51, 0.33, 1.0) + redScale * vec4(0.4, 0.14, 0.1, 1.0);
         redColor.y += 0.08 * (sin((fs_Height + fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.7, 1.5, 1.5)) * 45.0 )) * pow(fs_gradientScale, 2.2);
         redColor.x += 0.18 * (sin((fs_Height + fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.8, 1.5, 1.5)) * 80.0 )) * pow(fs_gradientScale, 2.2);
         redColor.z += 0.16 * (sin((fs_Height + fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.6, 1.5, 1.5)) * 65.0 )) * pow(fs_gradientScale, 2.2);
@@ -128,7 +168,7 @@ void main()
         vec4 greenColor = vec4(42.0 / 255.0, 50.0 / 255.0, 35.0 / 255.0, 1.0);
         greenColor = (greenScale) * greenColor + 0.1 * greenScale * greenColor;
 
-        vec4 saltColor = vec4(180.0 / 255.0, 210.0 / 255.0, 230.0 / 255.0, 1.0);
+        vec4 saltColor = vec4(215.0 / 255.0, 165.0 / 255.0, 150.0 / 255.0, 1.0);
         saltColor = (saltScale) * saltColor + 0.1 * saltScale * saltColor;
 
         // vec4 diffuseColor = vec4(greenMap, greenMap, greenMap, 1.0);
