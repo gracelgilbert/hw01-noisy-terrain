@@ -32,6 +32,8 @@ For the ground texture, I created various textures and then used maps to combine
 
 - Finally, I added salt to the flatter parts of the lower elevation terrain. The salt is placed on a macro scale using an FBM map that is elongated in X to create a striped pattern of sand. On the micro level, there are subtle cracks and spots in the sand to make it feel grainy. 
 
+The entire terrain is shaded with lambertion shading, which uses normals calculated from the gradient of the height map. Additionally, I applied distance fog towards the edge of the terrain, blending into the purple of the sky. 
+
 ### Sky
 To create the sky, I mapped the 2-dimensional screenspace of the back rectangle to a sphere surroudning the camera. Within this spherical space, I used various functions to create the sky texture and the moon.
 - To create the sky, interpolated between a color palette, going from dark purple up to icy blue. The blending of these colors uses a 3-dimensional worley based FBM, creating a cloudy feel. For the sky, I scaled down the screen space in the y direction in order to flatten out the FBM pattern. this make the clouds look elongated.
