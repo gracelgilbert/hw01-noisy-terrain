@@ -1,7 +1,7 @@
 # Grace Gilbert (gracegi)
 
 ## Demo Link
-![](https://gracelgilbert.github.io/hw01-noisy-terrain/)
+[](https://gracelgilbert.github.io/hw01-noisy-terrain/)
 
 ![](MainImage.png)
 
