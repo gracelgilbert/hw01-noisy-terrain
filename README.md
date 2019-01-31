@@ -20,9 +20,10 @@ I was largely inspired by the Atacama Desert in Chile. I like how the mountains 
 I combined three noise functions to create the height map of the terrain. The combination of these three noise functions helped me achieve the terrain variety I liked in the Atacama Desert. 
 - For the sharper peaks, I used a simple FBM and raised the output value to the 8th power to get steeper slopes and flatter flats.  
 - For the plateau heightmap and placement, I used a Worley Noise based FBM at a larger scale. The Worley Noise helped create natural looking pockets of flatter land surrounded by the plateaus. 
-- To flatten the tops of the plateaus, I bound the height map by a maximum height. I generated this maximum height using pure Worley Noise, which created a smooth, subtly rounded surface at the tops of the plateaus rather than a flat plane. The user can adjust the scale of the Worley Noise maximum height to raise and lower the plateaus. 
+- To flatten the tops of the plateaus, I bound the height map by a maximum height. I generated this maximum height using pure Worley Noise, which created a smooth, subtly rounded surface at the tops of the plateaus rather than a flat plane. The user can adjust the scale of the Worley Noise maximum height to raise and lower the plateaus. The scale of this Worley noise is modifiable, enabling the user to alter the height of the terrain.
 
-INSERT IMAGE OF HEIGHTMAP AND TERRAIN AT TWO DIFFERENT HEIGHTS
+![](HighPlateaus.png)
+![](LowPlateaus.png)
 
 ### Ground Texture
 For the ground texture, I created various textures and then used maps to combine them. 
@@ -30,7 +31,7 @@ For the ground texture, I created various textures and then used maps to combine
 
 - Layered on top of the red texture is a dusty, dark gray green tone. This texture is masked by an FBM, as well as the elevation and gradient of the terrain. The result is that the dark gray appears towards the tops of the plateaus as well as in flatter areas along the sides of mountains, creating a natural color shift on the elevated terrain. 
 
-- Finally, I added salt to the flatter parts of the lower elevation terrain. The salt is placed on a macro scale using an FBM map that is elongated in X to create a striped pattern of sand. On the micro level, there are subtle cracks and spots in the sand to make it feel grainy. 
+- Finally, I added salt to the flatter parts of the lower elevation terrain. The salt is placed on a macro scale using an FBM map that is elongated in X to create a striped pattern of sand. On the micro level, there are subtle cracks and spots in the sand to make it feel grainy. The salt map scale is modifiable, allowing the user to increase or decrease the amount of salt on the ground, as shown in the images of plateau height control above.
 
 The entire terrain is shaded with lambertion shading, which uses normals calculated from the gradient of the height map. Additionally, I applied distance fog towards the edge of the terrain, blending into the purple of the sky. 
 
