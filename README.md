@@ -23,7 +23,9 @@ I combined three noise functions to create the height map of the terrain. The co
 - To flatten the tops of the plateaus, I bound the height map by a maximum height. I generated this maximum height using pure Worley Noise, which created a smooth, subtly rounded surface at the tops of the plateaus rather than a flat plane. The user can adjust the scale of the Worley Noise maximum height to raise and lower the plateaus. The scale of this Worley noise is modifiable, enabling the user to alter the height of the terrain. The amount of salt, which I will discuss below, is modifiable as well.
 
 ![](HighPlateaus.png)
-High plateaus, high salt level
+<p align="center">
+  High plateaus, high salt level
+</p>
 ![](LowPlateaus.png)
 Low plateaus, low salt level
 
