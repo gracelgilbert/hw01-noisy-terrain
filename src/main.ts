@@ -1,4 +1,4 @@
-import {vec2, vec3} from 'gl-matrix';
+import {vec2, vec3, mat4} from 'gl-matrix';
 import * as Stats from 'stats-js';
 import * as DAT from 'dat-gui';
 import Square from './geometry/Square';
@@ -101,7 +101,7 @@ function main() {
   // Initial call to load scene
   loadScene();
 
-  const camera = new Camera(vec3.fromValues(0, 10, -20), vec3.fromValues(0, 0, 0));
+  const camera = new Camera(vec3.fromValues(0, 9, -21), vec3.fromValues(0, 0, 0));
 
   const renderer = new OpenGLRenderer(canvas);
   renderer.setClearColor(164.0 / 255.0, 233.0 / 255.0, 1.0, 1);
@@ -147,7 +147,11 @@ function main() {
     renderer.render(camera, lambert, controls.saltAmount, controls.plateauHeight, [
       plane,
     ]);
-    renderer.render(camera, flat, controls.saltAmount, controls.plateauHeight, [
+    let viewProjInv = mat4.create();
+    mat4.multiply(viewProjInv, camera.projectionMatrix, camera.viewMatrix);
+    mat4.invert(viewProjInv, viewProjInv);
+
+    renderer.renderVP(camera, viewProjInv, flat, controls.saltAmount, controls.plateauHeight, [
       square,
     ]);
     stats.end();

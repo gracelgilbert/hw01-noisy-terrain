@@ -33,6 +33,24 @@ class OpenGLRenderer {
     prog.setViewProjMatrix(viewProj);
     prog.setSaltAmount(saltAmount);
     prog.setPlateauHeight(plateauHeight);
+    prog.setCameraPos(camera.position);
+
+    for (let drawable of drawables) {
+      prog.draw(drawable);
+    }
+  }
+
+  renderVP(camera: Camera, viewProj: mat4, prog: ShaderProgram, saltAmount: number, plateauHeight: number, drawables: Array<Drawable>) {
+    let model = mat4.create();
+    let color = vec4.fromValues(1, 0, 0, 1);
+
+    mat4.identity(model);
+    prog.setModelMatrix(model);
+    prog.setViewProjMatrix(viewProj);
+    prog.setSaltAmount(saltAmount);
+    prog.setPlateauHeight(plateauHeight);
+    prog.setCameraPos(camera.position);
+
 
     for (let drawable of drawables) {
       prog.draw(drawable);

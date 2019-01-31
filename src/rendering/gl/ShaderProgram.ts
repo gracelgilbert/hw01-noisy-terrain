@@ -1,4 +1,4 @@
-import {vec2, vec4, mat4} from 'gl-matrix';
+import {vec2, vec4, mat4, vec3} from 'gl-matrix';
 import Drawable from './Drawable';
 import {gl} from '../../globals';
 
@@ -32,6 +32,7 @@ class ShaderProgram {
   unifPlanePos: WebGLUniformLocation;
   unifSaltAmount: WebGLUniformLocation;
   unifPlateauHeight: WebGLUniformLocation;
+  unifCameraPos: WebGLUniformLocation;
 
   constructor(shaders: Array<Shader>) {
     this.prog = gl.createProgram();
@@ -53,6 +54,7 @@ class ShaderProgram {
     this.unifPlanePos      = gl.getUniformLocation(this.prog, "u_PlanePos");
     this.unifSaltAmount    = gl.getUniformLocation(this.prog, "u_SaltAmount");
     this.unifPlateauHeight = gl.getUniformLocation(this.prog, "u_PlateauHeight");
+    this.unifCameraPos     = gl.getUniformLocation(this.prog, "u_CameraPos");
 
   }
 
@@ -106,6 +108,13 @@ class ShaderProgram {
     this.use();
     if (this.unifPlanePos !== -1) {
       gl.uniform2fv(this.unifPlanePos, pos);
+    }
+  }
+
+  setCameraPos(pos: vec3) {
+    this.use();
+    if (this.unifCameraPos !== -1) {
+      gl.uniform3fv(this.unifCameraPos, pos);
     }
   }
 

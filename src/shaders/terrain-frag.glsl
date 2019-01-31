@@ -57,15 +57,24 @@ float interpNoise3d(float x, float y, float z) {
   float intZ = floor(z);
   float fractZ = fract(z);
 
-  float v1 = random1(vec2(intX, intY), vec2(1.f, 1.f));
-  float v2 = random1(vec2(intX + 1.f, intY), vec2(1.f, 1.f));
-  float v3 = random1(vec2(intX, intY + 1.f), vec2(1.f, 1.f));
-  float v4 = random1(vec2(intX + 1.f, intY + 1.f), vec2(1.f, 1.f));
+  float v1 = random1(vec3(intX, intY, intZ), vec3(1.f, 1.f, 1.f));
+  float v2 = random1(vec3(intX, intY, intZ + 1.0), vec3(1.f, 1.f, 1.f));
+  float v3 = random1(vec3(intX + 1.0, intY, intZ + 1.0), vec3(1.f, 1.f, 1.f));
+  float v4 = random1(vec3(intX + 1.0, intY, intZ), vec3(1.f, 1.f, 1.f));
+  float v5 = random1(vec3(intX, intY + 1.0, intZ), vec3(1.f, 1.f, 1.f));
+  float v6 = random1(vec3(intX, intY + 1.0, intZ + 1.0), vec3(1.f, 1.f, 1.f));
+  float v7 = random1(vec3(intX + 1.0, intY + 1.0, intZ + 1.0), vec3(1.f, 1.f, 1.f));
+  float v8 = random1(vec3(intX + 1.0, intY + 1.0, intZ), vec3(1.f, 1.f, 1.f));
 
-  float i1 = mix(v1, v2, fractX);
-  float i2 = mix(v3, v4, fractX);
-  return mix(i1, i2, fractY);
-  return 2.0;
+  float i1 = mix(v2, v3, fractX);
+  float i2 = mix(v1, v4, fractX);
+  float i3 = mix(v6, v7, fractX);
+  float i4 = mix(v5, v8, fractX);
+
+  float j1 = mix(i4, i3, fractZ);
+  float j2 = mix(i2, i1, fractZ);
+
+  return mix(j2, j1, fractY);
 
 }
 
@@ -138,13 +147,14 @@ float fbm3D(float x, float y, float z, float height, float xScale, float yScale,
 
 void main()
 {
-    float t = clamp(smoothstep(25.0, 55.0, length(fs_Pos)), 0.0, 1.0); // Distance fog
+    float t = clamp(smoothstep(25.0, 90.0, length(fs_Pos)), 0.0, 1.0); // Distance fog
     // out_Col = vec4(mix(vec3(0.5 * (fs_Sine + 1.0)), vec3(164.0 / 255.0, 233.0 / 255.0, 1.0), t), 1.0);
         float heightNoise = pow(fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 1.0, 10.0, 10.0), 0.08);
 
         float redScale = 1.0 - clamp(pow(fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.6, 5.0, 5.0), 0.9), 0.2, 1.0);
+        redScale += pow(fs_gradientScale, 0.6) * pow(fbm3D(fs_Pos.x + u_PlanePos.x, fs_Height, fs_Pos.z + u_PlanePos.y, 1.0, 1.0, 0.215, 1.0), 0.7);
 
-        float greenScale = clamp(pow(fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.3, 0.1, 0.1), 0.4), 0.3, 0.8);
+        float greenScale = 1.2 * clamp(pow(fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.3, 0.1, 0.1), 0.4), 0.3, 0.8);
         float saltScale = 1.0 - clamp(pow(fbmWorley(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.5, 0.02, 0.02), 5.0), 0.0, 1.0);
 
         float cracks = (1.0 - fs_gradientScale) * (1.0 - (0.75 * pow(1.0 - fbmWorley(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.9, 0.03, 0.03), 0.03)
@@ -159,13 +169,13 @@ void main()
 
         // float greenScale = clamp(pow(fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.3, 0.1, 0.1), 0.4), 0.3, 0.8);
 
-        vec4 redColor = (1.0 - redScale) * vec4(0.9, 0.51, 0.33, 1.0) + redScale * vec4(0.4, 0.14, 0.1, 1.0);
-        redColor.y += 0.08 * (sin((fs_Height + fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.7, 1.5, 1.5)) * 45.0 )) * pow(fs_gradientScale, 2.2);
-        redColor.x += 0.18 * (sin((fs_Height + fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.8, 1.5, 1.5)) * 80.0 )) * pow(fs_gradientScale, 2.2);
-        redColor.z += 0.16 * (sin((fs_Height + fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.6, 1.5, 1.5)) * 65.0 )) * pow(fs_gradientScale, 2.2);
+        vec4 redColor = (1.0 - redScale) * vec4(0.9, 0.51, 0.33, 1.0) + redScale * vec4(0.45, 0.19, 0.1, 1.0);
+        redColor.y += pow((1.0 / fs_Height), 1.2) * 0.2 * (sin((fs_Height + fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.2, 1.5, 1.5)) * 45.0 )) * pow(fs_gradientScale, 2.2);
+        redColor.x += pow((1.0 / fs_Height), 1.2) * 0.21 * (sin((fs_Height + fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.2, 1.5, 1.5)) * 80.0 )) * pow(fs_gradientScale, 2.2);
+        redColor.z += pow((1.0 / fs_Height), 1.2) * 0.32 * (sin((fs_Height + fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.3, 1.5, 1.5)) * 65.0 )) * pow(fs_gradientScale, 2.2);
 
         vec4 cracksColor = vec4(0.0, 0.0, 0.0, 1.0);
-        vec4 greenColor = vec4(42.0 / 255.0, 50.0 / 255.0, 35.0 / 255.0, 1.0);
+        vec4 greenColor = vec4(58.0 / 255.0, 45.0 / 255.0, 37.0 / 255.0, 1.0);
         greenColor = (greenScale) * greenColor + 0.1 * greenScale * greenColor;
 
         vec4 saltColor = vec4(215.0 / 255.0, 165.0 / 255.0, 150.0 / 255.0, 1.0);
@@ -192,7 +202,8 @@ void main()
                                                             //to simulate ambient lighting. This ensures that faces that are not
                                                             //lit by our point light are not completely black.
 
-        out_Col = vec4(mix(vec3(diffuseColor.rgb * lightIntensity), vec3(40.0 / 255.0, 10.0 / 255.0, 80.0 / 255.0), t), 1.0);
+        out_Col = vec4(mix(vec3(diffuseColor.rgb * lightIntensity), (1.0/255.0) * vec3(50.0, 20.0, 100.0), t), 1.0);
+
             // out_Col = vec4(mix(vec3(0.5 * (fs_Sine + 1.0)), vec3(164.0 / 255.0, 233.0 / 255.0, 1.0), t), 1.0);
 
         // out_Col = fs_Nor;
