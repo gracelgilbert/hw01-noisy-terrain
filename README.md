@@ -3,7 +3,7 @@
 ## Demo Link
 ![https://gracelgilbert.github.io/hw01-noisy-terrain/](https://gracelgilbert.github.io/hw01-noisy-terrain/)
 
-![](TerrainImage.png)
+![](TopImage.png)
 
 ## External Resources
 I used the following source to help calculate the gradient of my height map terrain:
