@@ -17,11 +17,10 @@ I was largely inspired by the Atacama Desert in Chile. I like how the mountains 
 
 ## Implementation
 ### Height Map
-I combined three noise functions to create the height map of the terrain.  
+I combined three noise functions to create the height map of the terrain. The combination of these three noise functions helped me achieve the terrain variety I liked in the Atacama Desert. 
 - For the sharper peaks, I used a simple FBM and raised the output value to the 8th power to get steeper slopes and flatter flats.  
 - For the plateau heightmap and placement, I used a Worley Noise based FBM at a larger scale. The Worley Noise helped create natural looking pockets of flatter land surrounded by the plateaus. 
 - To flatten the tops of the plateaus, I bound the height map by a maximum height. I generated this maximum height using pure Worley Noise, which created a smooth, subtly rounded surface at the tops of the plateaus rather than a flat plane. The user can adjust the scale of the Worley Noise maximum height to raise and lower the plateaus. 
-The combination of these three noise functions helped me achieve the terrain variety I liked in the Atacama Desert. 
 
 INSERT IMAGE OF HEIGHTMAP AND TERRAIN AT TWO DIFFERENT HEIGHTS
 
