@@ -26,6 +26,7 @@ I combined three noise functions to create the height map of the terrain. The co
 <p align="center">
   High plateaus, high salt level
 </p>
+
 ![](LowPlateaus.png)
 <p align="center">
   Low plateaus, low salt level
