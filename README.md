@@ -37,5 +37,6 @@ The entire terrain is shaded with lambertion shading, which uses normals calcula
 ### Sky
 To create the sky, I mapped the 2-dimensional screenspace of the back rectangle to a sphere surroudning the camera. Within this spherical space, I used various functions to create the sky texture and the moon.
 - To create the sky, interpolated between a color palette, going from dark purple up to icy blue. The blending of these colors uses a 3-dimensional worley based FBM, creating a cloudy feel. For the sky, I scaled down the screen space in the y direction in order to flatten out the FBM pattern. this make the clouds look elongated.
-- 
+- For the moon texture, I layered various frequencies and distributions of FBM and Worley noise. The base color is a light gray. On top of that is a medium gray tone with a soft FBM evenly distributed to create an overal texture. On top of that is a darker gray mapped by the sum of a Worley Noise pattern and an FBM pattern. I modified this map by taking the absolute value of the cubic interpolation of the grayscale, which created a peak in the distribution. This sharpened the darks in a way that created a lunar-esque texture.
+- Once I had the two textures, for the moon and the sky, I used a mix function to combine the two. This mix function produced a value above 1, creating a loud, interesting texture that merged the moon pattern and the sky coloring. While this pattern alone was too intense (pictured below), I blended it with the original sky, adding interesting noise and color to the base FBM cloudy texture.
 
