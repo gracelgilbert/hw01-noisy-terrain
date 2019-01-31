@@ -20,7 +20,7 @@ out vec4 out_Col;
 // Sunset palette
 const vec3 sunset[5] = vec3[](vec3(40, 10, 80) / 255.0,
                                vec3(80, 50, 120) / 255.0,
-                               vec3(100, 100, 180) / 255.0,
+                               vec3(200, 170, 150) / 255.0,
                                vec3(160, 180, 220) / 255.0,
                                vec3(190, 255, 255) / 255.0);
 // Dusk palette
@@ -282,18 +282,20 @@ void main() {
   vec3 sunsetColor = uvToSunset(uv + worleySlope * 0.1);
   vec3 duskColor = uvToDusk(uv + worleySlope * 0.1);
 
-  vec3 sunDir = normalize(vec3(-0.26, -0.1, 1.0));
-  float sunSize = 30.0;
+  vec3 sunDir = normalize(vec3(0.0, -0.142, 1.0));
+  float sunSize = 31.0;
   float angle = acos(dot(rayDirNonTransformed, sunDir)) * 360.0 / PI;
 
-  out_Col = vec4(sunsetColor, 1.0);
+  out_Col = 0.9 * vec4(sunsetColor, 1.0);
+  out_Col += 0.1 * mix(moonColor, vec4(sunsetColor, 1.0), (angle - 5.0) / 10.0);
+
 
   if(angle < sunSize) {
-    if(angle < 20.0) {
+    if(angle < 31.0) {
         out_Col = moonColor;
     }
     // else {
-    //     out_Col = mix(moonColor, vec4(sunsetColor, 1.0), (angle - 7.5) / 22.5);
+    //     out_Col = mix(moonColor, vec4(sunsetColor, 1.0), (angle - 5.0) / 10.0);
     // }
   }
 

@@ -147,7 +147,7 @@ float fbm3D(float x, float y, float z, float height, float xScale, float yScale,
 
 void main()
 {
-    float t = clamp(smoothstep(25.0, 90.0, length(fs_Pos)), 0.0, 1.0); // Distance fog
+    float t = clamp(smoothstep(15.0, 60.0, length(fs_Pos)), 0.0, 1.0); // Distance fog
     // out_Col = vec4(mix(vec3(0.5 * (fs_Sine + 1.0)), vec3(164.0 / 255.0, 233.0 / 255.0, 1.0), t), 1.0);
         float heightNoise = pow(fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 1.0, 10.0, 10.0), 0.08);
 
@@ -170,9 +170,9 @@ void main()
         // float greenScale = clamp(pow(fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.3, 0.1, 0.1), 0.4), 0.3, 0.8);
 
         vec4 redColor = (1.0 - redScale) * vec4(0.9, 0.51, 0.33, 1.0) + redScale * vec4(0.45, 0.19, 0.1, 1.0);
-        redColor.y += pow((1.0 / fs_Height), 1.2) * 0.2 * (sin((fs_Height + fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.2, 1.5, 1.5)) * 45.0 )) * pow(fs_gradientScale, 2.2);
-        redColor.x += pow((1.0 / fs_Height), 1.2) * 0.21 * (sin((fs_Height + fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.2, 1.5, 1.5)) * 80.0 )) * pow(fs_gradientScale, 2.2);
-        redColor.z += pow((1.0 / fs_Height), 1.2) * 0.32 * (sin((fs_Height + fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.3, 1.5, 1.5)) * 65.0 )) * pow(fs_gradientScale, 2.2);
+        redColor.y += pow((1.0 / fs_Height), 1.2) * 0.23 * (sin((fs_Height + fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.2, 1.5, 1.5)) * 45.0 )) * pow(fs_gradientScale, 2.2);
+        redColor.x += pow((1.0 / fs_Height), 1.2) * 0.25 * (sin((fs_Height + fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.2, 1.5, 1.5)) * 80.0 )) * pow(fs_gradientScale, 2.2);
+        redColor.z += pow((1.0 / fs_Height), 1.2) * 0.35 * (sin((fs_Height + fbm(fs_Pos.x + u_PlanePos.x, fs_Pos.z + u_PlanePos.y, 0.3, 1.5, 1.5)) * 65.0 )) * pow(fs_gradientScale, 2.2);
 
         vec4 cracksColor = vec4(0.0, 0.0, 0.0, 1.0);
         vec4 greenColor = vec4(58.0 / 255.0, 45.0 / 255.0, 37.0 / 255.0, 1.0);
@@ -202,7 +202,7 @@ void main()
                                                             //to simulate ambient lighting. This ensures that faces that are not
                                                             //lit by our point light are not completely black.
 
-        out_Col = vec4(mix(vec3(diffuseColor.rgb * lightIntensity), (1.0/255.0) * vec3(50.0, 20.0, 100.0), t), 1.0);
+        out_Col = vec4(mix(vec3(diffuseColor.rgb * lightIntensity), (1.0/255.0) * vec3(15.0, 5.0, 18.0), t), 1.0);
 
             // out_Col = vec4(mix(vec3(0.5 * (fs_Sine + 1.0)), vec3(164.0 / 255.0, 233.0 / 255.0, 1.0), t), 1.0);
 
