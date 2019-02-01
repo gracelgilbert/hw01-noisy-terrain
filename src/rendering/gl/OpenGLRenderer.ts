@@ -22,7 +22,7 @@ class OpenGLRenderer {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   }
 
-  render(camera: Camera, prog: ShaderProgram, saltAmount: number, plateauHeight: number, drawables: Array<Drawable>) {
+  render(m_time: number, camera: Camera, prog: ShaderProgram, saltAmount: number, plateauHeight: number, drawables: Array<Drawable>) {
     let model = mat4.create();
     let viewProj = mat4.create();
     let color = vec4.fromValues(1, 0, 0, 1);
@@ -34,13 +34,14 @@ class OpenGLRenderer {
     prog.setSaltAmount(saltAmount);
     prog.setPlateauHeight(plateauHeight);
     prog.setCameraPos(camera.position);
+    prog.setTime(m_time);
 
     for (let drawable of drawables) {
       prog.draw(drawable);
     }
   }
 
-  renderVP(camera: Camera, viewProj: mat4, prog: ShaderProgram, saltAmount: number, plateauHeight: number, drawables: Array<Drawable>) {
+  renderVP(m_time: number, camera: Camera, viewProj: mat4, prog: ShaderProgram, saltAmount: number, plateauHeight: number, drawables: Array<Drawable>) {
     let model = mat4.create();
     let color = vec4.fromValues(1, 0, 0, 1);
 
@@ -50,6 +51,7 @@ class OpenGLRenderer {
     prog.setSaltAmount(saltAmount);
     prog.setPlateauHeight(plateauHeight);
     prog.setCameraPos(camera.position);
+    prog.setTime(m_time);
 
 
     for (let drawable of drawables) {

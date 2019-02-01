@@ -8,6 +8,7 @@ in vec4 fs_Pos;
 uniform ivec2 u_Dimensions; // Screen dimensions
 uniform mat4 u_ViewProj; // Should be the inverse of the view projection matrix
 uniform vec3 u_CameraPos;
+uniform int u_Time;
 
 
 const float PI = 3.14159265359;
@@ -116,7 +117,6 @@ float fbm(float x, float y, float height, float xScale, float yScale) {
   for (int i = 0; i < octaves; i++) {
     float freq = pow(2.0, float(i));
     float amp = pow(persistence, float(i));
-    // total += interpNoise2d( (x / xScale) * freq, (y / yScale) * freq) * amp;
     total += interpNoise2d( (x / xScale) * freq, (y / yScale) * freq) * amp;
   }
   return height * total;
@@ -192,7 +192,7 @@ float WorleyNoise3D(vec3 p)
                 vec3 point = random3(pointInt + neighbor);
 
     //             // Animate the point
-    //             point = 0.5 + 0.5 * sin(u_Time * 0.01 + 6.2831 * point); // 0 to 1 range
+                // point = 0.5 + 0.5 * sin(float(u_Time) * 0.05 + 6.2831 * point); // 0 to 1 range
 
                 // Compute the distance b/t the point and the fragment
                 // Store the min dist thus far
@@ -255,7 +255,7 @@ void main() {
 
 
   // vec2 ndc = (gl_FragCoord.xy / vec2(u_Dimensions)) * 2.0 - 1.0; // -1 to 1 NDC
-  vec2 ndc = vec2(x, y * 4.0 - 2.0); // -1 to 1 NDC
+  vec2 ndc = vec2(x + float(u_Time) * 0.001, y * 4.0 - 2.0); // -1 to 1 NDC
   vec2 ndcNonTransformed = vec2(x, y); // -1 to 1 NDC
 
 

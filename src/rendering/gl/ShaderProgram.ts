@@ -33,6 +33,8 @@ class ShaderProgram {
   unifSaltAmount: WebGLUniformLocation;
   unifPlateauHeight: WebGLUniformLocation;
   unifCameraPos: WebGLUniformLocation;
+  unifTime: WebGLUniformLocation;
+
 
   constructor(shaders: Array<Shader>) {
     this.prog = gl.createProgram();
@@ -55,6 +57,7 @@ class ShaderProgram {
     this.unifSaltAmount    = gl.getUniformLocation(this.prog, "u_SaltAmount");
     this.unifPlateauHeight = gl.getUniformLocation(this.prog, "u_PlateauHeight");
     this.unifCameraPos     = gl.getUniformLocation(this.prog, "u_CameraPos");
+    this.unifTime          = gl.getUniformLocation(this.prog, "u_Time");
 
   }
 
@@ -64,7 +67,16 @@ class ShaderProgram {
       activeProgram = this.prog;
     }
   }
+  
+  setTime(t: number) {
+    this.use();
 
+    if(this.unifTime != -1)
+    {
+      gl.uniform1i(this.unifTime, t);
+    }
+  }
+  
   setSaltAmount(s: number) {
     this.use();
 

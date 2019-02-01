@@ -24,6 +24,8 @@ let aPressed: boolean;
 let sPressed: boolean;
 let dPressed: boolean;
 let planePos: vec2;
+let m_time: number = 0.0;
+
 
 function loadScene() {
   square = new Square(vec3.fromValues(0, 0, 0));
@@ -144,17 +146,18 @@ function main() {
     gl.viewport(0, 0, window.innerWidth, window.innerHeight);
     renderer.clear();
     processKeyPresses();
-    renderer.render(camera, lambert, controls.saltAmount, controls.plateauHeight, [
+    renderer.render(m_time, camera, lambert, controls.saltAmount, controls.plateauHeight, [
       plane,
     ]);
     let viewProjInv = mat4.create();
     mat4.multiply(viewProjInv, camera.projectionMatrix, camera.viewMatrix);
     mat4.invert(viewProjInv, viewProjInv);
 
-    renderer.renderVP(camera, viewProjInv, flat, controls.saltAmount, controls.plateauHeight, [
+    renderer.renderVP(m_time, camera, viewProjInv, flat, controls.saltAmount, controls.plateauHeight, [
       square,
     ]);
     stats.end();
+    m_time = m_time + 1.0;
 
     // Tell the browser to call `tick` again whenever it renders a new frame
     requestAnimationFrame(tick);
