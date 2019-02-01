@@ -239,9 +239,9 @@ void main() {
 
   // vec4 skyColor = mix(color1, color2, t);
 
-  vec4 moonColor = vec4(0.99, 0.97, 0.9, 1.0);
-  vec4 moonMid = vec4(0.65, 0.65, 0.7, 1.0);
-  vec4 moonDark = vec4(0.15, 0.15, 0.1, 1.0);
+  vec4 moonColor = vec4(0.97, 0.99, 1.13, 1.0);
+  vec4 moonMid = vec4(0.52, 0.55, 0.6, 1.0);
+  vec4 moonDark = vec4(0.12, 0.15, 0.17, 1.0);
   float moonMidMap = 0.9 * pow(fbmWorley(x, y, 0.8, 0.01, 0.008), 0.4);
   float darkMapWorley = 0.6 * (1.0 - computeWorley(x + fbm(x, y, 0.1, 0.1, 0.1), y + fbm(x, y, 0.1, 0.1, 0.1), 165.0, 140.0));
   darkMapWorley *= (1.4 - abs(smoothstep(0.0, 1.0, darkMapWorley) - 0.5));
@@ -292,7 +292,8 @@ void main() {
 
   if(angle < sunSize) {
     if(angle < 31.0) {
-        out_Col = moonColor;
+        float moonScale = mix(0.3, 2.2, 1.0 - 0.5 * (fs_Pos.y + 1.0));
+        out_Col = moonScale * vec4(sunsetColor, 1.0) + (1.3 - moonScale) * moonColor;
     }
     // else {
     //     out_Col = mix(moonColor, vec4(sunsetColor, 1.0), (angle - 5.0) / 10.0);
